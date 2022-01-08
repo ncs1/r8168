@@ -8,7 +8,7 @@ else
 fi
 
 DRV_DIR="$(pwd)"
-DRV_NAME=r8169
+DRV_NAME=r8168
 DRV_VERSION=8.049.02
 
 dkms remove ${DRV_NAME}/${DRV_VERSION} --all
