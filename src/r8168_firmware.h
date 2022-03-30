@@ -39,30 +39,32 @@
 #include <linux/firmware.h>
 
 struct rtl8168_private;
-typedef void (*rtl8168_fw_write_t)(struct rtl8168_private *tp, u16 reg, u16 val);
+typedef void (*rtl8168_fw_write_t)(struct rtl8168_private *tp, u16 reg,
+				   u16 val);
 typedef u32 (*rtl8168_fw_read_t)(struct rtl8168_private *tp, u16 reg);
 
-#define RTL8168_VER_SIZE		32
+#define RTL8168_VER_SIZE 32
 
 struct rtl8168_fw {
-        rtl8168_fw_write_t phy_write;
-        rtl8168_fw_read_t phy_read;
-        rtl8168_fw_write_t mac_mcu_write;
-        rtl8168_fw_read_t mac_mcu_read;
-        const struct firmware *fw;
-        const char *fw_name;
-        struct device *dev;
+	rtl8168_fw_write_t phy_write;
+	rtl8168_fw_read_t phy_read;
+	rtl8168_fw_write_t mac_mcu_write;
+	rtl8168_fw_read_t mac_mcu_read;
+	const struct firmware *fw;
+	const char *fw_name;
+	struct device *dev;
 
-        char version[RTL8168_VER_SIZE];
+	char version[RTL8168_VER_SIZE];
 
-        struct rtl8168_fw_phy_action {
-                __le32 *code;
-                size_t size;
-        } phy_action;
+	struct rtl8168_fw_phy_action {
+		__le32 *code;
+		size_t size;
+	} phy_action;
 };
 
 int rtl8168_fw_request_firmware(struct rtl8168_fw *rtl_fw);
 void rtl8168_fw_release_firmware(struct rtl8168_fw *rtl_fw);
-void rtl8168_fw_write_firmware(struct rtl8168_private *tp, struct rtl8168_fw *rtl_fw);
+void rtl8168_fw_write_firmware(struct rtl8168_private *tp,
+			       struct rtl8168_fw *rtl_fw);
 
 #endif /* _LINUX_RTL8168_FIRMWARE_H */

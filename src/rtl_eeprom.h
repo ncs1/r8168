@@ -33,13 +33,13 @@
  ***********************************************************************************/
 
 //EEPROM opcodes
-#define RTL_EEPROM_READ_OPCODE      06
-#define RTL_EEPROM_WRITE_OPCODE     05
-#define RTL_EEPROM_ERASE_OPCODE     07
-#define RTL_EEPROM_EWEN_OPCODE      19
-#define RTL_EEPROM_EWDS_OPCODE      16
+#define RTL_EEPROM_READ_OPCODE 06
+#define RTL_EEPROM_WRITE_OPCODE 05
+#define RTL_EEPROM_ERASE_OPCODE 07
+#define RTL_EEPROM_EWEN_OPCODE 19
+#define RTL_EEPROM_EWDS_OPCODE 16
 
-#define RTL_CLOCK_RATE  3
+#define RTL_CLOCK_RATE 3
 
 void rtl8168_eeprom_type(struct rtl8168_private *tp);
 void rtl8168_eeprom_cleanup(struct rtl8168_private *tp);
@@ -51,6 +51,3 @@ void rtl8168_raise_clock(struct rtl8168_private *tp, u8 *x);
 void rtl8168_lower_clock(struct rtl8168_private *tp, u8 *x);
 void rtl8168_stand_by(struct rtl8168_private *tp);
 void rtl8168_set_eeprom_sel_low(struct rtl8168_private *tp);
-
-
-

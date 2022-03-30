@@ -36,22 +36,20 @@
 #define _LINUX_R8168_FIBER_H
 
 enum {
-        FIBER_MODE_NIC_ONLY = 0,
-        FIBER_MODE_RTL8168H_RTL8211FS,
-        FIBER_MODE_RTL8168H_MDI_SWITCH_RTL8211FS,
-        FIBER_MODE_MAX
+	FIBER_MODE_NIC_ONLY = 0,
+	FIBER_MODE_RTL8168H_RTL8211FS,
+	FIBER_MODE_RTL8168H_MDI_SWITCH_RTL8211FS,
+	FIBER_MODE_MAX
 };
 
 enum {
-        FIBER_STAT_NOT_CHECKED = 0,
-        FIBER_STAT_CONNECT,
-        FIBER_STAT_DISCONNECT,
-        FIBER_STAT_MAX
+	FIBER_STAT_NOT_CHECKED = 0,
+	FIBER_STAT_CONNECT,
+	FIBER_STAT_DISCONNECT,
+	FIBER_STAT_MAX
 };
 
-#define HW_FIBER_MODE_ENABLED(_M)        ((_M)->HwFiberModeVer > 0)
-
-
+#define HW_FIBER_MODE_ENABLED(_M) ((_M)->HwFiberModeVer > 0)
 
 void rtl8168_hw_init_fiber_nic(struct net_device *dev);
 void rtl8168_hw_fiber_nic_d3_para(struct net_device *dev);
@@ -62,6 +60,5 @@ unsigned int rtl8168_hw_fiber_link_ok(struct net_device *dev);
 void rtl8168_check_fiber_link_status(struct net_device *dev);
 void rtl8168_check_hw_fiber_mode_support(struct net_device *dev);
 void rtl8168_set_fiber_mode_software_variable(struct net_device *dev);
-
 
 #endif /* _LINUX_R8168_FIBER_H */
