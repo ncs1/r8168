@@ -1636,7 +1636,11 @@ static void rtl8168_proc_module_init(void)
 static int rtl8168_proc_open(struct inode *inode, struct file *file)
 {
 	struct net_device *dev = proc_get_parent_data(inode);
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 17, 0)
+	int (*show)(struct seq_file *, void *) = pde_data(inode);
+#else
 	int (*show)(struct seq_file *, void *) = PDE_DATA(inode);
+#endif
 
 	return single_open(file, show, dev);
 }
@@ -24122,7 +24126,11 @@ static int rtl8168_get_mac_address(struct net_device *dev)
 	rtl8168_rar_set(tp, mac_addr);
 
 	for (i = 0; i < MAC_ADDR_LEN; i++) {
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 17, 0)
+		dev_addr_mod(dev, i, tp->mmio_addr + (MAC0 + i), 1);
+#else
 		dev->dev_addr[i] = RTL_R8(tp, MAC0 + i);
+#endif
 		tp->org_mac_addr[i] =
 			dev->dev_addr[i]; /* keep the original MAC address */
 	}
