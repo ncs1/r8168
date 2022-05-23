@@ -26328,11 +26328,11 @@ static int __devinit rtl8168_init_board(struct pci_dev *pdev,
 	}
 
 	if ((sizeof(dma_addr_t) > 4) && use_dac &&
-	    !pci_set_dma_mask(pdev, DMA_BIT_MASK(64)) &&
-	    !pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(64))) {
+	    !dma_set_mask(&pdev->dev, DMA_BIT_MASK(64)) &&
+	    !dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(64))) {
 		dev->features |= NETIF_F_HIGHDMA;
 	} else {
-		rc = pci_set_dma_mask(pdev, DMA_BIT_MASK(32));
+		rc = dma_set_mask(&pdev->dev, DMA_BIT_MASK(32));
 		if (rc < 0) {
 #if LINUX_VERSION_CODE > KERNEL_VERSION(2, 6, 0)
 			if (netif_msg_probe(tp))
