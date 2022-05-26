@@ -3599,8 +3599,8 @@ static void rtl8168_mac_loopback_test(struct rtl8168_private *tp)
 	txd->opts2 = 0;
 	while (1) {
 		memset(tmpAddr, pattern++, len - 14);
-		pci_dma_sync_single_for_device(
-			tp->pci_dev, le64_to_cpu(mapping), len, DMA_TO_DEVICE);
+		dma_sync_single_for_device(
+			&tp->pci_dev->dev, le64_to_cpu(mapping), len, DMA_TO_DEVICE);
 		txd->opts1 = cpu_to_le32(DescOwn | FirstFrag | LastFrag | len);
 
 		RTL_W32(tp, RxConfig, RTL_R32(tp, RxConfig) | AcceptMyPhys);
@@ -3633,7 +3633,7 @@ static void rtl8168_mac_loopback_test(struct rtl8168_private *tp)
 						le64_to_cpu(rxd->addr),
 						tp->rx_buf_sz, DMA_FROM_DEVICE);
 			i = memcmp(skb->data, rx_skb->data, rx_len);
-			pci_dma_sync_single_for_device(tp->pci_dev,
+			dma_sync_single_for_device(&tp->pci_dev->dev,
 						       le64_to_cpu(rxd->addr),
 						       tp->rx_buf_sz,
 						       DMA_FROM_DEVICE);
