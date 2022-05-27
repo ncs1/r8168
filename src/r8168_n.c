@@ -7479,7 +7479,7 @@ static bool rtl8168_test_phy_ocp_v3(struct rtl8168_private *tp)
 	rtl8168_mdio_write(tp, 0x1F, 0x0C41);
 	rtl8168_set_eth_phy_bit(tp, 0x14, BIT_0);
 	rtl8168_mdio_write(tp, 0x1F, 0x0000);
-	mdelay(24000); //24ms
+	mdelay(24); //24ms
 
 	rtl8168_mdio_write(tp, 0x1F, 0x0C40);
 	PhyRegValue = rtl8168_mdio_read(tp, 0x12);
@@ -7489,7 +7489,7 @@ static bool rtl8168_test_phy_ocp_v3(struct rtl8168_private *tp)
 			rtl8168_mdio_write(tp, 0x1F, 0x0C40);
 			rtl8168_set_eth_phy_bit(tp, 0x11, (BIT_15 | BIT_14));
 			rtl8168_clear_eth_phy_bit(tp, 0x11, (BIT_15 | BIT_14));
-			mdelay(100000);
+			mdelay(100);
 			rtl8168_mdio_write(tp, 0x1F, 0x0C40);
 			PhyRegValue = rtl8168_mdio_read(tp, 0x12);
 			WaitCnt++;
