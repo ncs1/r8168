@@ -3599,8 +3599,9 @@ static void rtl8168_mac_loopback_test(struct rtl8168_private *tp)
 	txd->opts2 = 0;
 	while (1) {
 		memset(tmpAddr, pattern++, len - 14);
-		dma_sync_single_for_device(
-			&tp->pci_dev->dev, le64_to_cpu(mapping), len, DMA_TO_DEVICE);
+		dma_sync_single_for_device(&tp->pci_dev->dev,
+					   le64_to_cpu(mapping), len,
+					   DMA_TO_DEVICE);
 		txd->opts1 = cpu_to_le32(DescOwn | FirstFrag | LastFrag | len);
 
 		RTL_W32(tp, RxConfig, RTL_R32(tp, RxConfig) | AcceptMyPhys);
@@ -3634,9 +3635,9 @@ static void rtl8168_mac_loopback_test(struct rtl8168_private *tp)
 						tp->rx_buf_sz, DMA_FROM_DEVICE);
 			i = memcmp(skb->data, rx_skb->data, rx_len);
 			dma_sync_single_for_device(&tp->pci_dev->dev,
-						       le64_to_cpu(rxd->addr),
-						       tp->rx_buf_sz,
-						       DMA_FROM_DEVICE);
+						   le64_to_cpu(rxd->addr),
+						   tp->rx_buf_sz,
+						   DMA_FROM_DEVICE);
 			if (i == 0) {
 				//              dev_printk(KERN_INFO, tp_to_dev(tp), "loopback test finished\n",rx_len,len);
 				break;
@@ -3805,7 +3806,7 @@ static void rtl8168_enable_exit_l1_mask(struct rtl8168_private *tp)
 		csi_tmp |= (BIT_10 | BIT_11);
 		rtl8168_eri_write(tp, 0xD4, 4, csi_tmp, ERIAR_ExGMAC);
 		break;
-	case CFG_METHOD_21 ... CFG_METHOD_34:
+	case CFG_METHOD_21 ... CFG_METHOD_35:
 		csi_tmp = rtl8168_eri_read(tp, 0xD4, 4, ERIAR_ExGMAC);
 		csi_tmp |= (BIT_7 | BIT_8 | BIT_9 | BIT_10 | BIT_11 | BIT_12);
 		rtl8168_eri_write(tp, 0xD4, 4, csi_tmp, ERIAR_ExGMAC);
@@ -3831,7 +3832,7 @@ static void rtl8168_disable_exit_l1_mask(struct rtl8168_private *tp)
 		csi_tmp &= ~(BIT_10 | BIT_11);
 		rtl8168_eri_write(tp, 0xD4, 4, csi_tmp, ERIAR_ExGMAC);
 		break;
-	case CFG_METHOD_21 ... CFG_METHOD_34:
+	case CFG_METHOD_21 ... CFG_METHOD_35:
 		csi_tmp = rtl8168_eri_read(tp, 0xD4, 4, ERIAR_ExGMAC);
 		csi_tmp &= ~(BIT_7 | BIT_8 | BIT_9 | BIT_10 | BIT_11 | BIT_12);
 		rtl8168_eri_write(tp, 0xD4, 4, csi_tmp, ERIAR_ExGMAC);
@@ -5040,7 +5041,7 @@ static void rtl8168_powerdown_pll(struct net_device *dev)
 	case CFG_METHOD_14 ... CFG_METHOD_15:
 		RTL_W8(tp, 0xD0, RTL_R8(tp, 0xD0) & ~BIT_6);
 		break;
-	case CFG_METHOD_16 ... CFG_METHOD_34:
+	case CFG_METHOD_16 ... CFG_METHOD_35:
 		RTL_W8(tp, 0xD0, RTL_R8(tp, 0xD0) & ~BIT_6);
 		RTL_W8(tp, 0xF2, RTL_R8(tp, 0xF2) & ~BIT_6);
 		break;
@@ -5850,7 +5851,6 @@ static void rtl8168_get_ringparam(struct net_device *dev,
 
 	ring->rx_max_pending = MAX_NUM_TX_DESC;
 	ring->tx_max_pending = MAX_NUM_RX_DESC;
-	;
 	ring->rx_pending = tp->num_rx_desc;
 	ring->tx_pending = tp->num_tx_desc;
 }
@@ -6642,7 +6642,7 @@ static int rtl_ethtool_get_eee(struct net_device *net, struct ethtool_eee *eee)
 	u16 val;
 
 	switch (tp->mcfg) {
-	case CFG_METHOD_21 ... CFG_METHOD_34:
+	case CFG_METHOD_21 ... CFG_METHOD_35:
 		break;
 	default:
 		return -EOPNOTSUPP;
@@ -6688,7 +6688,7 @@ static int rtl_ethtool_set_eee(struct net_device *net, struct ethtool_eee *eee)
 	unsigned long flags;
 
 	switch (tp->mcfg) {
-	case CFG_METHOD_21 ... CFG_METHOD_34:
+	case CFG_METHOD_21 ... CFG_METHOD_35:
 		break;
 	default:
 		return -EOPNOTSUPP;
@@ -7447,6 +7447,9 @@ static bool rtl8168_test_phy_ocp_v3(struct rtl8168_private *tp)
 	u8 uc_response;
 	u8 nctl_pc_range_fail;
 	u8 nctl_pc_stuck_fail;
+
+	if (FALSE == HW_HAS_WRITE_PHY_MCU_RAM_CODE(tp))
+		goto exit;
 
 	rtl8168_mdio_write(tp, 0x1F, 0x0B82);
 	uc_response = !!(rtl8168_mdio_read(tp, 0x10) & BIT_5);
@@ -9705,7 +9708,7 @@ static int rtl8168_set_phy_mcu_patch_request(struct rtl8168_private *tp)
 	int retval = TRUE;
 
 	switch (tp->mcfg) {
-	case CFG_METHOD_21 ... CFG_METHOD_34:
+	case CFG_METHOD_21 ... CFG_METHOD_35:
 		rtl8168_mdio_write(tp, 0x1f, 0x0B82);
 		rtl8168_set_eth_phy_bit(tp, 0x10, BIT_4);
 
@@ -9734,7 +9737,7 @@ static int rtl8168_clear_phy_mcu_patch_request(struct rtl8168_private *tp)
 	int retval = TRUE;
 
 	switch (tp->mcfg) {
-	case CFG_METHOD_21 ... CFG_METHOD_34:
+	case CFG_METHOD_21 ... CFG_METHOD_35:
 		rtl8168_mdio_write(tp, 0x1f, 0x0B82);
 		rtl8168_clear_eth_phy_bit(tp, 0x10, BIT_4);
 
@@ -25026,6 +25029,10 @@ static void rtl8168_init_software_variable(struct net_device *dev)
 		rtl8168_mdio_write(tp, 0x1F, 0x0000);
 
 		tp->TestPhyOcpReg = TRUE;
+#ifdef ENABLE_USE_FIRMWARE_FILE
+		if (tp->HwSuppEsdVer == 3)
+			tp->TestPhyOcpReg = FALSE;
+#endif
 	}
 
 	switch (tp->mcfg) {
