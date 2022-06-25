@@ -349,7 +349,7 @@ static inline bool pm_runtime_active(struct device *dev)
 #endif
 
 #define RTL8168_VERSION                                                        \
-	"8.050.02" NAPI_SUFFIX FIBER_SUFFIX REALWOW_SUFFIX DASH_SUFFIX
+	"8.050.03" NAPI_SUFFIX FIBER_SUFFIX REALWOW_SUFFIX DASH_SUFFIX
 #define MODULENAME "r8168"
 #define PFX MODULENAME ": "
 
@@ -1830,7 +1830,7 @@ enum mcfg {
 #define NIC_RAMCODE_VERSION_CFG_METHOD_28 (0x0019)
 #define NIC_RAMCODE_VERSION_CFG_METHOD_29 (0x0055)
 #define NIC_RAMCODE_VERSION_CFG_METHOD_31 (0x0003)
-#define NIC_RAMCODE_VERSION_CFG_METHOD_35 (0x0004)
+#define NIC_RAMCODE_VERSION_CFG_METHOD_35 (0x0010)
 
 //hwoptimize
 #define HW_PATCH_SOC_LAN (BIT_0)
