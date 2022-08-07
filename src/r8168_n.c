@@ -26817,7 +26817,11 @@ static int __devinit rtl8168_init_one(struct pci_dev *pdev,
 		if ((tp->mcfg == CFG_METHOD_1) || (tp->mcfg == CFG_METHOD_2) ||
 		    (tp->mcfg == CFG_METHOD_3)) {
 			dev->hw_features &= ~NETIF_F_IPV6_CSUM;
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 19, 0)
+			netif_set_tso_max_size(dev, LSO_32K);
+#else
 			netif_set_gso_max_size(dev, LSO_32K);
+#endif
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 18, 0)
 			dev->gso_max_segs = NIC_MAX_PHYS_BUF_COUNT_LSO_64K;
 #if LINUX_VERSION_CODE < KERNEL_VERSION(4, 7, 0)
@@ -26832,7 +26836,11 @@ static int __devinit rtl8168_init_one(struct pci_dev *pdev,
 				dev->hw_features |= NETIF_F_TSO6;
 				//dev->features |=  NETIF_F_TSO6;
 			}
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 19, 0)
+			netif_set_tso_max_size(dev, LSO_64K);
+#else
 			netif_set_gso_max_size(dev, LSO_64K);
+#endif
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 18, 0)
 			dev->gso_max_segs = NIC_MAX_PHYS_BUF_COUNT_LSO2;
 #if LINUX_VERSION_CODE < KERNEL_VERSION(4, 7, 0)
