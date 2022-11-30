@@ -193,7 +193,7 @@ static inline bool pm_runtime_active(struct device *dev)
 #define NETIF_F_RXFCS 0
 #endif
 
-#ifndef HAVE_FREE_NETDEV
+#if !defined(HAVE_FREE_NETDEV) && (LINUX_VERSION_CODE < KERNEL_VERSION(3, 1, 0))
 #define free_netdev(x) kfree(x)
 #endif
 
@@ -349,7 +349,7 @@ static inline bool pm_runtime_active(struct device *dev)
 #endif
 
 #define RTL8168_VERSION                                                        \
-	"8.050.03" NAPI_SUFFIX FIBER_SUFFIX REALWOW_SUFFIX DASH_SUFFIX
+	"8.051.02" NAPI_SUFFIX FIBER_SUFFIX REALWOW_SUFFIX DASH_SUFFIX
 #define MODULENAME "r8168"
 #define PFX MODULENAME ": "
 
@@ -457,6 +457,11 @@ This is free software, and you are welcome to redistribute it under certain cond
 #define RX_BUF_SIZE 0x05F3 /* 0x05F3 = 1522bye + 1 */
 
 #define OCP_STD_PHY_BASE 0xa400
+
+//Channel Wait Count
+#define R8168_CHANNEL_WAIT_COUNT (20000)
+#define R8168_CHANNEL_WAIT_TIME (1) // 1us
+#define R8168_CHANNEL_EXIT_DELAY_TIME (20) //20us
 
 #define NODE_ADDRESS_SIZE 6
 
@@ -1412,6 +1417,7 @@ enum _DescStatusBit {
 enum features {
 	//  RTL_FEATURE_WOL = (1 << 0),
 	RTL_FEATURE_MSI = (1 << 1),
+	RTL_FEATURE_MSIX = (1 << 2),
 };
 
 enum wol_capability { WOL_DISABLED = 0, WOL_ENABLED = 1 };
@@ -1535,6 +1541,8 @@ struct rtl8168_private {
 	struct RxDesc *RxDescArray; /* 256-aligned Rx descriptor ring */
 	dma_addr_t TxPhyAddr;
 	dma_addr_t RxPhyAddr;
+	u32 TxDescAllocSize;
+	u32 RxDescAllocSize;
 	struct sk_buff *Rx_skbuff[MAX_NUM_RX_DESC]; /* Rx data buffers */
 	struct ring_info tx_skb[MAX_NUM_TX_DESC]; /* Tx data buffers */
 	unsigned rx_buf_sz;
@@ -1547,6 +1555,7 @@ struct rtl8168_private {
 	u16 cp_cmd;
 	u16 intr_mask;
 	u16 timer_intr_mask;
+	int irq;
 	int phy_auto_nego_reg;
 	int phy_1000_ctrl_reg;
 	u8 org_mac_addr[NODE_ADDRESS_SIZE];
@@ -1835,7 +1844,7 @@ enum mcfg {
 #define NIC_RAMCODE_VERSION_CFG_METHOD_28 (0x0019)
 #define NIC_RAMCODE_VERSION_CFG_METHOD_29 (0x0055)
 #define NIC_RAMCODE_VERSION_CFG_METHOD_31 (0x0003)
-#define NIC_RAMCODE_VERSION_CFG_METHOD_35 (0x0010)
+#define NIC_RAMCODE_VERSION_CFG_METHOD_35 (0x0019)
 
 //hwoptimize
 #define HW_PATCH_SOC_LAN (BIT_0)
